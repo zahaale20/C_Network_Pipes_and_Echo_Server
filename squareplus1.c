@@ -29,14 +29,14 @@ int main(void){
         close(pipe2[0]); // close read end of second pipe
 
         int num;
-        if(read(pipe1[0], &num, sizeof(num)) != sizeof(num)){
+        if(read(pipe1[0], &num, sizeof(num)) != sizeof(int)){
             perror("Error: reading number from pipe.\n");
             exit(EXIT_FAILURE);
         }
 
         num *= num;
 
-        if(write(pipe2[1], &num, sizeof(num)) != sizeof(num)){
+        if(write(pipe2[1], &num, sizeof(num)) != sizeof(int)){
             perror("Error: writing number to pipe.");
             exit(EXIT_FAILURE);
         }
@@ -55,11 +55,48 @@ int main(void){
             close(pipe1[0]); // close read end of pipe1
             close(pipe2[1]); // close write end of pipe2
 
+            int num;
 
+            if(read(pipe2[0], &num, sizeof(num)) != sizeof(int)){
+                perror("Error: reading number from pipe.\n");
+                exit(EXIT_FAILURE);
+            }
+
+            num += 1;
+
+            if(write(pipe1[1], &num, sizeof((num)) != sizeof(int))){
+                perror("Error: writing number to pipe.\n");
+                exit(EXIT_FAILURE);
+            }
+
+            close(pipe1[1]);
+            close(pipe2[0]);
+
+            exit(EXIT_SUCCESS);
 
         } else {
-            wait(pid, NULL, 0);
-            wait(pid2, NULL, 0);
+            close(pipe1[1]);
+            close(pipe2[0]);
+
+            int num;
+            while(scanf(%d, &num) != EOF){
+                if(write(pipe1[1], &num, sizeof(num)) != sizeof(int)){
+                    perror("Error: writing number to child process.\n");
+                    exit(EXIT_FAILURE);
+                }
+                if(read(pipe2[0], &num, sizeof(num)) != sizeof(int)){
+                    perror("Error: reading number from child process.\n");
+                    exit(EXIT_FAILURE);
+                }
+                
+                printf("Result: %d\n", num);
+                printf("Enter an integer (EOF to exit): ");
+            }
+
+            close(pipe1[1]);
+            close(pipe2[0]);
+            waitpid(pid1, NULL, 0);
+            waitpid(pid2, NULL, 0);
 
         }
 
