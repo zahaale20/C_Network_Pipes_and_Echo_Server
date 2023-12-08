@@ -34,7 +34,9 @@ char *line = NULL;
       ssize_t bytes_read = read(fd, buffer, sizeof(buffer) - 1); // read output from server
       if (bytes_read > 0){
          buffer[bytes_read] = '\0';
-         printf("Received from server: %s", buffer);
+         printf("Received from server: %s\n", buffer);
+      } else {
+         break;
       }
       printf("Enter input: ");
    }
