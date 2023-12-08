@@ -19,7 +19,7 @@ int main(void) {
         exit(EXIT_FAILURE);
     }
     if (pipe(pipe3) == -1) {
-        perror("Error: creating pipe2.\n");
+        perror("Error: creating pipe3.\n");
         exit(EXIT_FAILURE);
     }
 
